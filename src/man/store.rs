@@ -1,6 +1,8 @@
-use std::fmt::{ Display, Formatter };
+use std::fmt::{Display, Formatter};
+use serde::{Serialize, Deserialize};
 use crate::io::io::pad_right;
 
+#[derive(Serialize, Deserialize, Clone)]
 pub struct Record {
 	pub id: i8,
 	pub title: String,

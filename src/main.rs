@@ -6,6 +6,5 @@ mod io;
 mod man;
 
 fn main() {
-	let mut man = Manager::init();
-	man.start();
+	Manager::init().start();
 }
