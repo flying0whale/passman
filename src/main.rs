@@ -1,10 +1,14 @@
-#![allow(dead_code)]
-
 use crate::man::man::Manager;
 
 mod io;
 mod man;
+mod storage;
 
 fn main() {
-	Manager::init().start();
+	match Manager::init() {
+		Ok(mut m) => {
+			m.start();
+		}
+		Err(str) => { println!("{}", str) }
+	};
 }
