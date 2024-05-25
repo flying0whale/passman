@@ -9,6 +9,7 @@ const PATH: &str = "json_data.json";
 
 #[derive(Serialize, Deserialize)]
 pub struct Manager {
+	access_pass: Option<String>,
 	next_id: i8,
 	records: Vec<Record>,
 	run: bool
@@ -17,6 +18,7 @@ pub struct Manager {
 impl Manager {
 	pub fn init() -> Manager {
 		Manager {
+			access_pass: None,
 			next_id: 1,
 			records: Vec::new(),
 			run: false
@@ -26,15 +28,48 @@ impl Manager {
 	pub fn start(&mut self) {
 		match self.load() {
 			Ok(_) => {
-				self.run = true;
-				println!("Welcome!");
-				Self::print_help();
+				if self.access_pass.is_some() {
+					loop {
+						print("Enter a password >> ".to_string());
+						let pass = read_string();
+						if pass == self.access_pass.clone().unwrap() { cls(); break; }
+
+						println!("Wrong password");
+					}
+				} else {
+					println!("You don't have an access password for a passman. Are you want to create one?");
+
+					loop {
+						print("y/n >> ".to_string());
+
+						match read_string().as_str() {
+							"y" => {
+								print("Enter a password >> ".to_string());
+								let pass = read_string();
+								self.access_pass = Some(pass);
+								self.save().expect("Failed to save password D:");
+
+								cls();
+								break;
+							},
+							"n" => {
+								cls();
+								break;
+							},
+							_ => { println!("That's not an answer. Do you want to create a password?") }
+						};
+					}
+				}
 			}
 			Err(err) => {
 				println!("{}", err);
 				return;
 			}
 		};
+
+		self.run = true;
+		println!("Welcome!");
+		Self::print_help();
 
 		while self.run {
 			let cmd = Self::read_command();
@@ -85,6 +120,7 @@ impl Manager {
 			Err(_) => { return Err(format!("Could not read data from JSON file {}", PATH)) }
 		};
 
+		self.access_pass = man.access_pass;
 		self.next_id = man.next_id;
 		self.records = man.records;
 
@@ -161,7 +197,7 @@ impl Manager {
 		println!("{}adds new record",                pad_right("add [title] [login] [password]", WIDTH));
 		println!("{}deletes a record",               pad_right("remove [id]", WIDTH));
 		println!("{}finds a record by it's title",   pad_right("find [title]", WIDTH));
-		println!("{}clears a console",                  pad_right("cls", WIDTH));
+		println!("{}clears a console",               pad_right("cls", WIDTH));
 		println!("{}exits program",                  pad_right("exit", WIDTH));
 	}
 }
