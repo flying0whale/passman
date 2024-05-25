@@ -9,7 +9,7 @@ pub fn print(text: String) {
 }
 
 pub fn cls() {
-	print!("{}[2J", 27 as char);
+	clearscreen::clear().expect("failed to clear screen");
 }
 
 pub fn read_string() -> String {
