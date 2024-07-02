@@ -43,7 +43,7 @@ impl Manager {
 				if self.access_pass.is_some() {
 					loop {
 						print("Enter a password >> ".to_string());
-						let pass = read_string();
+						let pass = read_string().unwrap();
 						if pass == self.access_pass.clone().unwrap() { cls(); break; }
 
 						println!("Wrong password");
@@ -54,10 +54,10 @@ impl Manager {
 					loop {
 						print("y/n >> ".to_string());
 
-						match read_string().as_str() {
+						match read_string().unwrap().as_str() {
 							"y" => {
 								print("Enter a password >> ".to_string());
-								let pass = read_string();
+								let pass = read_string().unwrap();
 								self.access_pass = Some(pass);
 								self.save().expect("Failed to save password D:");
 
@@ -206,9 +206,9 @@ impl Manager {
 
 	fn read_command() -> Command {
 		print("\nEnter a command >> ".parse().unwrap());
-		let input: Vec<String> = read_string().trim().split(' ')
-													 .map(|x| x.to_string())
-													 .collect();
+		let input: Vec<String> = read_string().unwrap().trim().split(' ')
+													   .map(|x| x.to_string())
+													   .collect();
 		let title = input.first().unwrap().to_lowercase();
 
 		let mut args: Vec<String> = Vec::new();

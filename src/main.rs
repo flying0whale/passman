@@ -6,8 +6,8 @@ mod storage;
 
 fn main() {
 	match Manager::init() {
-		Ok(mut m) => {
-			m.start();
+		Ok(mut man) => {
+			man.start();
 		}
 		Err(str) => { println!("{}", str) }
 	};

@@ -13,13 +13,13 @@ pub fn cls() {
 	clearscreen::clear().expect("failed to clear screen");
 }
 
-// TODO: return Result instead of plain string
-pub fn read_string() -> String {
+pub fn read_string() -> Result<String, String> {
 	let mut input = String::new();
 
-	stdin().read_line(&mut input).unwrap();
-
-	return input.trim().parse().unwrap();
+	return  match stdin().read_line(&mut input) {
+		Ok(_) => Ok(input.trim().parse().unwrap()),
+		Err(_) => { Err("Failed to read from console".to_string()) }
+	};
 }
 
 pub fn pad_right(text: &str, width: usize) -> String {
